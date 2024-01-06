@@ -1,6 +1,16 @@
 import discord
 from discord.ext import commands
 import pomice
+from urllib.parse import urlparse, parse_qs
+
+def get_youtube_video_id(url):
+    # Parse the URL
+    parsed_url = urlparse(url)
+
+    # Extract the video ID from the query parameters
+    video_id = parse_qs(parsed_url.query).get('v', [None])[0]
+
+    return video_id
 
 class MusicCog(commands.Cog):
     def __init__(self, bot):
@@ -42,6 +52,7 @@ class MusicCog(commands.Cog):
                 raise commands.CommandError("Invalid results")
 
             first_track = results[0]
+            video_id = get_youtube_video_id(first_track.uri)
 
             embed = discord.Embed(
                 type="rich",
@@ -56,6 +67,9 @@ class MusicCog(commands.Cog):
             embed.set_footer(
                 text=f"{self.bot.user.name}",
                 icon_url=f"{self.bot.user.avatar}",
+            )
+            embed.set_thumbnail(
+                url=f"https://i3.ytimg.com/vi/{video_id}/maxresdefault.jpg"
             )
             await ctx.send(embed=embed)
 

@@ -12,7 +12,6 @@ import re
 
 TOKEN=config.TOKEN
 VER=config.VER
-
 activity = discord.Activity(type=discord.ActivityType.listening,
                             name="hf.help ​ • ​ HF+")
 bot = commands.Bot(command_prefix="hf.",
@@ -30,6 +29,17 @@ async def start_nodes():
         identifier="MAIN",
     )
     print("Connected!")
+
+#async def start_nodes():
+#    pomice_instance = pomice.NodePool()
+#    await pomice_instance.create_node(
+#        bot=bot,
+#        host="localhost",
+#        port=4488,
+#        password="YOUR PASSWORD HERE",
+#        identifier="MAIN",
+#    )
+#    print("Connected!")
 
 @bot.event
 async def on_ready():
