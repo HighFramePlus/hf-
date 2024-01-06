@@ -17,7 +17,7 @@ class MusicCog(commands.Cog):
                 )
 
         await ctx.author.voice.channel.connect(cls=pomice.Player)
-        await ctx.send(f"Joined the voice channel `{channel}`")
+        return channel
 
     @commands.command(aliases=["dc", "disconnect"])
     async def leave(self, ctx):
@@ -37,18 +37,30 @@ class MusicCog(commands.Cog):
 
         try:
             results = await player.get_tracks(search)
-
-            # Check if results is a non-empty list
             if not results:
                 print(f"Invalid results: {results}")
                 raise commands.CommandError("Invalid results")
 
             first_track = results[0]
-            print(f"Playing track: {first_track.title} - {first_track.uri}")
 
-            # Play the track
+            embed = discord.Embed(
+                type="rich",
+                description=f"# <:i_:1193254871898525736>  **` Now Playing `**\n"
+                            + f"<:i_:1193246591600033853>  **` Title         `** ` {first_track.title} `\n"
+                            + f"<:i_:1193246596574486679>  **` YouTube Link  `** ` {first_track.uri} `\n"
+                            + f" \n"
+                            + f"<:i_:1193246595089702915> [**` Source Code  `**](https://github.com/HighFramePlus) ​ ​"
+                            + f" <:i_:1193246592925442109> [**` Invite HF+  `**](https://discord.com/api/oauth2/authorize?client_id=1192895508025462966&permissions=8&scope=bot)",
+                color=2829617
+            )
+            embed.set_footer(
+                text=f"{self.bot.user.name}",
+                icon_url=f"{self.bot.user.avatar}",
+            )
+            await ctx.send(embed=embed)
+
             await player.play(track=first_track)
-            await player.set_volume(volume=100)  # Adjust the volume as needed
+            await player.set_volume(volume=100)
 
         except pomice.exceptions.TrackLoadError as e:
             print(f"Error loading the track: {e}")

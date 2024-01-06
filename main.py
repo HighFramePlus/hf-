@@ -5,18 +5,20 @@ from discord.gateway import DiscordWebSocket
 import pomice
 
 from core import status
-import cfg
+import config
 
 import glob
 import re
 
-TOKEN=cfg.TOKEN
-VER="0.02.41p"
+TOKEN=config.TOKEN
+VER=config.VER
 
-activity = discord.Activity(type=discord.ActivityType.listening, name="check @5xtech.jpeg")
-bot = commands.Bot(command_prefix=",",
+activity = discord.Activity(type=discord.ActivityType.listening,
+                            name="hf.help ​ • ​ HF+")
+bot = commands.Bot(command_prefix="hf.",
                    intents=discord.Intents().all(),
-                   activity=activity)
+                   activity=activity,
+                   help_command=None)
 
 async def start_nodes():
     pomice_instance = pomice.NodePool()
@@ -27,7 +29,7 @@ async def start_nodes():
         password="hfplus@lavalink",
         identifier="MAIN",
     )
-    print(f"Node is ready!")
+    print("Connected!")
 
 @bot.event
 async def on_ready():
@@ -40,6 +42,24 @@ async def on_ready():
             await bot.load_extension("cogs.{}".format(re.split(r"/|\\", file)[-1][:-3]))
         except Exception as e:
             print(f"Failed to load {file} \n{type(e).__name__}: {e}")
+
+@bot.command()
+async def help(ctx):
+    embed = discord.Embed(
+        type="rich",
+        description="<:i_:1193246587967774730>  **` Core Commands  `**\n\n"
+                    " ​ ​ ` help      ` ​ ​ ​ ​ ​Show full command list\n"
+                    " ​ ​ ` ping      ` ​ ​ ​ ​ ​Bot connection details\n"
+                    " \n"
+                    "Use   ` hf.help <command> ` to view more information about a command.",
+        color=2829617
+    )
+    embed.set_footer(
+        text="HF+ • Page 1/7",
+        icon_url=f"{bot.user.avatar}",
+    )
+
+    await ctx.send(embed=embed)
 
 DiscordWebSocket.identify = status.identify
 bot.run(TOKEN)

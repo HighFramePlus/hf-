@@ -2,12 +2,9 @@ import discord
 from discord.ext import commands
 from discord_together import DiscordTogether
 
-import ..cfg
-
 class Activities(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.TOKEN = cfg.TOKEN
 
     @commands.command()
     async def yt(self, ctx):
